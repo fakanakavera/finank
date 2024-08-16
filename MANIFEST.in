@@ -1,4 +1,4 @@
 include README.md
 include LICENSE
-recursive-include metate/static *
-recursive-include metate/templates *
+recursive-include finank/static *
+recursive-include finank/templates *
