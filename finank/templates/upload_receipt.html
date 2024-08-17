@@ -45,8 +45,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const input = document.getElementById('expense');
     const expenseList = document.getElementById('expense-list');
     const selectedExpenseIdInput = document.getElementById('selected-expense-id');
-    const variableAmountGroup = document.getElementById('variable-amount-group');
-    const variableAmountInput = document.getElementById('variable-amount');
 
     const expenses = [
         {% for expense in expenses %}
@@ -73,14 +71,6 @@ document.addEventListener("DOMContentLoaded", function() {
                         input.value = li.textContent;
                         expenseList.innerHTML = '';
                         selectedExpenseIdInput.value = li.dataset.id; // Store the selected expense ID
-                        
-                        // Show or hide the variable amount input based on the expense amount
-                        if (li.dataset.amount == -1) {
-                            variableAmountGroup.style.display = 'block';
-                        } else {
-                            variableAmountGroup.style.display = 'none';
-                            variableAmountInput.value = ''; // Clear the variable amount input
-                        }
                     });
                     expenseList.appendChild(li);
                 }
@@ -88,5 +78,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
 </script>
 {% endblock %}
