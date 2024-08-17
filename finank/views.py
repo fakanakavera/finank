@@ -11,7 +11,6 @@ from django.db.models import Sum
 def test(request):
     return render(request, 'test.html', {})
 
-
 def expenses_overview(request):
     # Get the current month and year (or get from request parameters if needed)
     selected_month = request.GET.get('month', datetime.now().month)
@@ -21,8 +20,13 @@ def expenses_overview(request):
     selected_month = int(selected_month)
     selected_year = int(selected_year)
 
-    # Filter expenses for the selected month and year
-    expenses = Expense.objects.filter(date__year=selected_year, date__month=selected_month)
+    # Filter for expenses that are either:
+    # - Specifically for the selected month
+    # - Recurring and should be considered for this month
+    expenses = Expense.objects.filter(
+        (Q(date__year=selected_year, date__month=selected_month)) |
+        (Q(is_recurring=True, date__year__lte=selected_year, date__month__lte=selected_month))
+    )
 
     # Initialize lists for paid and unpaid expenses
     paid_expenses = []
@@ -30,7 +34,7 @@ def expenses_overview(request):
 
     # Iterate over expenses and check if they have been fully paid
     for expense in expenses:
-        # Sum up all receipts related to this expense
+        # Sum up all receipts related to this expense for the selected month
         total_paid = Receipt.objects.filter(expense=expense).aggregate(Sum('amount'))['amount__sum'] or 0
 
         if total_paid >= expense.amount:
@@ -56,6 +60,7 @@ def expenses_overview(request):
     }
 
     return render(request, 'expenses_overview.html', context)
+
 
 
 def upload_receipt(request):
