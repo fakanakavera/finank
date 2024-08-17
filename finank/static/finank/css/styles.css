@@ -1,5 +1,5 @@
 /* Ensure the input field with form-control is the reference point for absolute positioning */
-.form-control {
+.form-group {
     position: relative;
 }
 
