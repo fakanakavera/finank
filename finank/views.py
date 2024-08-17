@@ -124,6 +124,7 @@ def upload_receipt(request):
         return redirect('upload_receipt')
 
     expenses = Expense.objects.all()
+    print(expenses)
     return render(request, 'upload_receipt.html', {
         'expenses': expenses,
         'months': range(1, 13),  # Pass months to template
