@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Expense, Receipt
+from .models import Expense, Receipt, Category
 
 from datetime import datetime
 from django.db.models import Q, Sum
@@ -10,6 +10,25 @@ from django.db.models import Q, Sum
 # make a view that returns a test page DO NOT USE HTML FILE, MAKE THE HTML IN THE VIEW
 def test(request):
     return render(request, 'test.html', {})
+
+def expenses_by_category(request):
+    categories = Category.objects.all()
+    selected_category_id = request.GET.get('category')
+    
+    if selected_category_id:
+        selected_category = Category.objects.get(id=selected_category_id)
+        expenses = Expense.objects.filter(category=selected_category, user=request.user)
+    else:
+        selected_category = None
+        expenses = []
+
+    context = {
+        'categories': categories,
+        'selected_category': selected_category,
+        'expenses': expenses,
+    }
+
+    return render(request, 'expenses_by_category.html', context)
 
 def expenses_overview(request):
     selected_month = request.GET.get('month', datetime.now().month)

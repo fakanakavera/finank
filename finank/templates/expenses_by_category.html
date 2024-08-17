@@ -1,0 +1,35 @@
+<!-- expenses_by_category.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Select a Category to View Expenses</h2>
+
+<form method="get" action="{% url 'expenses_by_category' %}">
+    <div class="form-group">
+        <label for="category">Select Category:</label>
+        <select name="category" id="category" class="form-control">
+            <option value="">-- Select a Category --</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}" {% if selected_category and selected_category.id == category.id %}selected{% endif %}>
+                {{ category.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+{% if selected_category %}
+<h3>Expenses in Category: {{ selected_category.name }}</h3>
+<ul>
+    {% for expense in expenses %}
+    <li>
+        {{ expense.name }} - ${{ expense.amount }} on {{ expense.date }}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>Please select a category to view expenses.</p>
+{% endif %}
+{% endblock %}
