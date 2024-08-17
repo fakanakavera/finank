@@ -31,7 +31,9 @@ def upload_receipt(request):
             receipt_amount = expense.amount
 
         # Save the receipt with the amount
-        Receipt.objects.create(expense=expense, image=receipt_file, amount=receipt_amount)
+        Receipt.objects.create(expense=expense, 
+                               image=receipt_file if receipt_file else None, 
+                               amount=receipt_amount)
 
         # Redirect to a success page or back to the form
         return redirect('upload_receipt')
