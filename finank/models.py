@@ -49,6 +49,8 @@ class Receipt(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to=receipt_upload_to)
     uploaded_at = models.DateTimeField(auto_now_add=True)
+    payment_month = models.IntegerField(default=datetime.now().month)
+    payment_year = models.IntegerField(default=datetime.now().year)
 
     def __str__(self):
         return f"Receipt for {self.expense.category.name} on {self.uploaded_at}"

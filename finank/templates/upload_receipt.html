@@ -15,13 +15,28 @@
     <div class="form-group" id="variable-amount-group" style="display:none;">
         <label for="variable-amount">Enter Amount:</label>
         <input type="number" id="variable-amount" name="variable_amount" class="form-control" placeholder="Enter the amount" step="0.01">
-    </div>    
+    </div>
 
     <div class="form-group">
         <label for="receipt">Upload Receipt (optional):</label>
         <input type="file" id="receipt" name="receipt" class="form-control">
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+
+    <div class="form-group">
+        <label for="payment_month">Payment Month:</label>
+        <select name="payment_month" id="payment_month" class="form-control">
+            {% for month in "1,2,3,4,5,6,7,8,9,10,11,12".split(",") %}
+            <option value="{{ month }}" {% if month|int == current_month %}selected{% endif %}>{{ month }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="payment_year">Payment Year:</label>
+        <input type="number" name="payment_year" id="payment_year" class="form-control" value="{{ current_year }}" min="2000" max="2100">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Upload</button>
 </form>
 
 <script>

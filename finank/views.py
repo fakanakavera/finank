@@ -12,33 +12,25 @@ def test(request):
     return render(request, 'test.html', {})
 
 def expenses_overview(request):
-    # Get the current month and year (or get from request parameters if needed)
     selected_month = request.GET.get('month', datetime.now().month)
     selected_year = request.GET.get('year', datetime.now().year)
 
-    # Convert to integers
     selected_month = int(selected_month)
     selected_year = int(selected_year)
 
-    # Filter for expenses that are either:
-    # - Specifically for the selected month
-    # - Recurring and should be considered for this month
     expenses = Expense.objects.filter(
         Q(date__year=selected_year, date__month=selected_month) |
         Q(is_recurring=True, date__year__lte=selected_year, date__month__lte=selected_month)
     )
 
-    # Initialize lists for paid and unpaid expenses
     paid_expenses = []
     unpaid_expenses = []
 
-    # Iterate over expenses and check if they have been fully paid
     for expense in expenses:
-        # Sum up all receipts related to this expense for the selected month and year
         total_paid = Receipt.objects.filter(
             expense=expense,
-            uploaded_at__year=selected_year,
-            uploaded_at__month=selected_month
+            payment_year=selected_year,
+            payment_month=selected_month
         ).aggregate(Sum('amount'))['amount__sum'] or 0
 
         if total_paid >= expense.amount:
@@ -47,8 +39,8 @@ def expenses_overview(request):
                 'total_paid': total_paid,
                 'receipts': Receipt.objects.filter(
                     expense=expense,
-                    uploaded_at__year=selected_year,
-                    uploaded_at__month=selected_month
+                    payment_year=selected_year,
+                    payment_month=selected_month
                 )
             })
         else:
@@ -58,8 +50,8 @@ def expenses_overview(request):
                 'remaining': expense.amount - total_paid,
                 'receipts': Receipt.objects.filter(
                     expense=expense,
-                    uploaded_at__year=selected_year,
-                    uploaded_at__month=selected_month
+                    payment_year=selected_year,
+                    payment_month=selected_month
                 )
             })
 
@@ -74,9 +66,10 @@ def expenses_overview(request):
     return render(request, 'expenses_overview.html', context)
 
 
-
-
 def upload_receipt(request):
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+
     if request.method == 'POST':
         expense_id = request.POST.get('selected_expense_id')
         receipt_file = request.FILES.get('receipt')
@@ -84,27 +77,34 @@ def upload_receipt(request):
         
         # Determine the amount to save in the receipt
         if expense.amount == -1:
-            # If the expense is variable, get the amount from the user input
             variable_amount = request.POST.get('variable_amount')
             if not variable_amount:
-                # Handle the case where no amount is provided
                 return render(request, 'upload_receipt.html', {
                     'expenses': Expense.objects.all(),
                     'error': 'Please enter the amount for the selected expense.'
                 })
             receipt_amount = float(variable_amount)
         else:
-            # If the expense is fixed, use the amount from the expense
             receipt_amount = expense.amount
 
-        # Save the receipt with the amount
-        Receipt.objects.create(expense=expense, 
-                               image=receipt_file if receipt_file else None, 
-                               amount=receipt_amount)
+        # Get the payment month and year from the form, or use the current values
+        payment_month = int(request.POST.get('payment_month', current_month))
+        payment_year = int(request.POST.get('payment_year', current_year))
 
-        # Redirect to a success page or back to the form
+        # Create the receipt object with the payment month and year
+        Receipt.objects.create(
+            expense=expense,
+            image=receipt_file if receipt_file else None,
+            amount=receipt_amount,
+            payment_month=payment_month,
+            payment_year=payment_year
+        )
+
         return redirect('upload_receipt')
 
-    # Retrieve all expenses (or a specific subset depending on your needs)
     expenses = Expense.objects.all()
-    return render(request, 'upload_receipt.html', {'expenses': expenses})
+    return render(request, 'upload_receipt.html', {
+        'expenses': expenses,
+        'current_month': current_month,
+        'current_year': current_year
+    })
