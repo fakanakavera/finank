@@ -1,0 +1,36 @@
+/* Style the list to look like a dropdown */
+#expense-list {
+    list-style-type: none;
+    /* Remove bullet points */
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ccc;
+    /* Add a border to the list */
+    max-height: 150px;
+    /* Limit the height if there are many items */
+    overflow-y: auto;
+    /* Allow scrolling if the list is too long */
+    position: absolute;
+    /* Position it right below the input field */
+    width: 100%;
+    /* Match the width of the input field */
+    background-color: white;
+    /* Set a background color */
+    z-index: 1000;
+    /* Ensure the dropdown appears above other elements */
+}
+
+/* Style each list item */
+#expense-list .list-group-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    /* Make it look clickable */
+    border-bottom: 1px solid #eee;
+    /* Separate each item */
+}
+
+/* Add a hover effect for list items */
+#expense-list .list-group-item:hover {
+    background-color: #f0f0f0;
+    /* Change background on hover */
+}

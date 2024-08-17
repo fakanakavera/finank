@@ -23,7 +23,7 @@ class Expense(models.Model):
     payments_made = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.category.name} - {self.amount}"
+        return f"{self.name} - {self.amount}"
 
 class Receipt(models.Model):
     expense = models.ForeignKey(Expense, on_delete=models.CASCADE, related_name='receipts')
