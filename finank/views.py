@@ -5,7 +5,7 @@ from .models import Expense, Receipt
 
 # make a view that returns a test page DO NOT USE HTML FILE, MAKE THE HTML IN THE VIEW
 def test(request):
-    return render(request, 'finank/test.html', {})
+    return render(request, 'test.html', {})
 
 def upload_receipt(request):
     if request.method == 'POST':
