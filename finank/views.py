@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Expense, Receipt
 
 from datetime import datetime
-from django.db.models import Sum
+from django.db.models import Q, Sum
 
 
 # make a view that returns a test page DO NOT USE HTML FILE, MAKE THE HTML IN THE VIEW
@@ -60,6 +60,7 @@ def expenses_overview(request):
     }
 
     return render(request, 'expenses_overview.html', context)
+
 
 
 
