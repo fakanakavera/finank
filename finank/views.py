@@ -17,7 +17,7 @@ def expenses_by_category(request):
     
     if selected_category_id:
         selected_category = Category.objects.get(id=selected_category_id)
-        expenses = Expense.objects.filter(category=selected_category, user=request.user)
+        expenses = Expense.objects.filter(category=selected_category)
     else:
         selected_category = None
         expenses = []
