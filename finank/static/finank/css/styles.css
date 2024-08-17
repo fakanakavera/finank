@@ -22,7 +22,7 @@ body {
     /* Remove bullet points */
     margin: 0;
     padding: 0;
-    border: 1px solid #ccc;
+    border: 1px solid #000000;
     /* Add a border to the list */
     max-height: 150px;
     /* Limit the height if there are many items */
@@ -36,7 +36,7 @@ body {
     /* Align it to the left edge of the input field */
     width: 100%;
     /* Match the width of the input field */
-    background-color: white;
+    background-color: rgb(0, 0, 0);
     /* Set a background color */
     z-index: 1000;
     /* Ensure the dropdown appears above other elements */
@@ -47,12 +47,12 @@ body {
     padding: 8px 12px;
     cursor: pointer;
     /* Make it look clickable */
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #000000;
     /* Separate each item */
 }
 
 /* Add a hover effect for list items */
 #expense-list .list-group-item:hover {
-    background-color: #f0f0f0;
+    background-color: #000000;
     /* Change background on hover */
 }
