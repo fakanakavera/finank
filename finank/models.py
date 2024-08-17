@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from .views import receipt_upload_to
 
 class Category(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -27,7 +28,7 @@ class Expense(models.Model):
 
 class Receipt(models.Model):
     expense = models.ForeignKey(Expense, on_delete=models.CASCADE, related_name='receipts')
-    image = models.ImageField(upload_to='receipts/')
+    image = models.ImageField(upload_to=receipt_upload_to)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
