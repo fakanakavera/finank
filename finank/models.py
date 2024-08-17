@@ -1,6 +1,24 @@
 from django.db import models
 from django.conf import settings
-from .views import receipt_upload_to
+from django.utils.text import slugify
+from datetime import datetime
+import os
+
+def receipt_upload_to(instance, filename):
+    # Get the original extension of the uploaded file
+    extension = filename.split('.')[-1]
+    
+    # Create a slugified version of the expense name
+    expense_name_slug = slugify(instance.expense.description)
+    
+    # Get the current date and time
+    current_datetime = datetime.now().strftime('%Y%m%d_%H%M%S')
+    
+    # Combine the slug, datetime, and extension to form the new filename
+    new_filename = f"{expense_name_slug}_{current_datetime}.{extension}"
+    
+    # Return the path where the file will be saved
+    return os.path.join('receipts', new_filename)
 
 class Category(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
