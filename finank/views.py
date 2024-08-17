@@ -12,7 +12,6 @@ def test(request):
     return render(request, 'test.html', {})
 
 
-
 def expenses_overview(request):
     # Get the current month and year (or get from request parameters if needed)
     selected_month = request.GET.get('month', datetime.now().month)
@@ -53,9 +52,11 @@ def expenses_overview(request):
         'unpaid_expenses': unpaid_expenses,
         'selected_month': selected_month,
         'selected_year': selected_year,
+        'months': range(1, 13),  # Passing the range to the template
     }
 
     return render(request, 'expenses_overview.html', context)
+
 
 def upload_receipt(request):
     if request.method == 'POST':
