@@ -24,8 +24,8 @@ def expenses_overview(request):
     # - Specifically for the selected month
     # - Recurring and should be considered for this month
     expenses = Expense.objects.filter(
-        (Q(date__year=selected_year, date__month=selected_month)) |
-        (Q(is_recurring=True, date__year__lte=selected_year, date__month__lte=selected_month))
+        Q(date__year=selected_year, date__month=selected_month) |
+        Q(is_recurring=True, date__year__lte=selected_year, date__month__lte=selected_month)
     )
 
     # Initialize lists for paid and unpaid expenses
@@ -34,21 +34,33 @@ def expenses_overview(request):
 
     # Iterate over expenses and check if they have been fully paid
     for expense in expenses:
-        # Sum up all receipts related to this expense for the selected month
-        total_paid = Receipt.objects.filter(expense=expense).aggregate(Sum('amount'))['amount__sum'] or 0
+        # Sum up all receipts related to this expense for the selected month and year
+        total_paid = Receipt.objects.filter(
+            expense=expense,
+            uploaded_at__year=selected_year,
+            uploaded_at__month=selected_month
+        ).aggregate(Sum('amount'))['amount__sum'] or 0
 
         if total_paid >= expense.amount:
             paid_expenses.append({
                 'expense': expense,
                 'total_paid': total_paid,
-                'receipts': Receipt.objects.filter(expense=expense)
+                'receipts': Receipt.objects.filter(
+                    expense=expense,
+                    uploaded_at__year=selected_year,
+                    uploaded_at__month=selected_month
+                )
             })
         else:
             unpaid_expenses.append({
                 'expense': expense,
                 'total_paid': total_paid,
                 'remaining': expense.amount - total_paid,
-                'receipts': Receipt.objects.filter(expense=expense)
+                'receipts': Receipt.objects.filter(
+                    expense=expense,
+                    uploaded_at__year=selected_year,
+                    uploaded_at__month=selected_month
+                )
             })
 
     context = {
@@ -56,7 +68,7 @@ def expenses_overview(request):
         'unpaid_expenses': unpaid_expenses,
         'selected_month': selected_month,
         'selected_year': selected_year,
-        'months': range(1, 13),  # Passing the range to the template
+        'months': range(1, 13),
     }
 
     return render(request, 'expenses_overview.html', context)
