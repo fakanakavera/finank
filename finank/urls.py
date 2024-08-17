@@ -3,12 +3,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 # import test view from views.py
-from .views import test, upload_receipt
+from .views import test, upload_receipt, expenses_overview
 
 # create a path to the test view
 urlpatterns = [
     path('test/', test, name='test'),
     path('upload-receipt/', upload_receipt, name='upload_receipt'),
+    path('expenses-overview/', expenses_overview, name='expenses_overview'),
 ]
 
 if settings.DEBUG:

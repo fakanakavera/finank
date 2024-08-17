@@ -3,11 +3,59 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Expense, Receipt
 
+from datetime import datetime
+from django.db.models import Sum
 
 
 # make a view that returns a test page DO NOT USE HTML FILE, MAKE THE HTML IN THE VIEW
 def test(request):
     return render(request, 'test.html', {})
+
+
+
+def expenses_overview(request):
+    # Get the current month and year (or get from request parameters if needed)
+    selected_month = request.GET.get('month', datetime.now().month)
+    selected_year = request.GET.get('year', datetime.now().year)
+
+    # Convert to integers
+    selected_month = int(selected_month)
+    selected_year = int(selected_year)
+
+    # Filter expenses for the selected month and year
+    expenses = Expense.objects.filter(date__year=selected_year, date__month=selected_month)
+
+    # Initialize lists for paid and unpaid expenses
+    paid_expenses = []
+    unpaid_expenses = []
+
+    # Iterate over expenses and check if they have been fully paid
+    for expense in expenses:
+        # Sum up all receipts related to this expense
+        total_paid = Receipt.objects.filter(expense=expense).aggregate(Sum('amount'))['amount__sum'] or 0
+
+        if total_paid >= expense.amount:
+            paid_expenses.append({
+                'expense': expense,
+                'total_paid': total_paid,
+                'receipts': Receipt.objects.filter(expense=expense)
+            })
+        else:
+            unpaid_expenses.append({
+                'expense': expense,
+                'total_paid': total_paid,
+                'remaining': expense.amount - total_paid,
+                'receipts': Receipt.objects.filter(expense=expense)
+            })
+
+    context = {
+        'paid_expenses': paid_expenses,
+        'unpaid_expenses': unpaid_expenses,
+        'selected_month': selected_month,
+        'selected_year': selected_year,
+    }
+
+    return render(request, 'expenses_overview.html', context)
 
 def upload_receipt(request):
     if request.method == 'POST':

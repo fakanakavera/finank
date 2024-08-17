@@ -1,0 +1,49 @@
+<!-- templates/expenses_overview.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Expenses Overview for {{ selected_month }}/{{ selected_year }}</h2>
+
+<h3>Paid Expenses</h3>
+<ul>
+    {% for item in paid_expenses %}
+    <li>
+        <strong>{{ item.expense.name }}</strong> - ${{ item.total_paid }} paid
+        <ul>
+            {% for receipt in item.receipts %}
+            <li>Receipt: ${{ receipt.amount }} on {{ receipt.uploaded_at }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+
+<h3>Unpaid Expenses</h3>
+<ul>
+    {% for item in unpaid_expenses %}
+    <li>
+        <strong>{{ item.expense.name }}</strong> - ${{ item.remaining }} remaining
+        <ul>
+            {% for receipt in item.receipts %}
+            <li>Receipt: ${{ receipt.amount }} on {{ receipt.uploaded_at }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+
+<form method="get">
+    <label for="month">Select Month:</label>
+    <select name="month" id="month">
+        {% for month in range(1, 13) %}
+        <option value="{{ month }}" {% if month == selected_month %}selected{% endif %}>{{ month }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="year">Select Year:</label>
+    <input type="number" name="year" id="year" value="{{ selected_year }}" min="2000" max="2100">
+
+    <button type="submit">Filter</button>
+</form>
+{% endblock %}
