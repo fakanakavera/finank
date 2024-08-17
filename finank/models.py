@@ -32,7 +32,7 @@ class Expense(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=0)
     date = models.DateField()
     description = models.TextField(blank=True, null=True)
     is_recurring = models.BooleanField(default=False)
@@ -46,6 +46,7 @@ class Expense(models.Model):
 
 class Receipt(models.Model):
     expense = models.ForeignKey(Expense, on_delete=models.CASCADE, related_name='receipts')
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to=receipt_upload_to)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 

@@ -15,15 +15,23 @@ def upload_receipt(request):
         receipt_file = request.FILES.get('receipt')
         expense = get_object_or_404(Expense, id=expense_id)
         
-        # Check if the expense amount is -1 (variable)
+        # Determine the amount to save in the receipt
         if expense.amount == -1:
+            # If the expense is variable, get the amount from the user input
             variable_amount = request.POST.get('variable_amount')
-            if variable_amount:
-                expense.amount = float(variable_amount)
-                expense.save()
+            if not variable_amount:
+                # Handle the case where no amount is provided
+                return render(request, 'upload_receipt.html', {
+                    'expenses': Expense.objects.all(),
+                    'error': 'Please enter the amount for the selected expense.'
+                })
+            receipt_amount = float(variable_amount)
+        else:
+            # If the expense is fixed, use the amount from the expense
+            receipt_amount = expense.amount
 
-        # Save the receipt linked to the selected expense
-        Receipt.objects.create(expense=expense, image=receipt_file)
+        # Save the receipt with the amount
+        Receipt.objects.create(expense=expense, image=receipt_file, amount=receipt_amount)
 
         # Redirect to a success page or back to the form
         return redirect('upload_receipt')
