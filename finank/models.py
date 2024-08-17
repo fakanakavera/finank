@@ -9,7 +9,7 @@ def receipt_upload_to(instance, filename):
     extension = filename.split('.')[-1]
     
     # Create a slugified version of the expense name
-    expense_name_slug = slugify(instance.expense.description)
+    expense_name_slug = slugify(instance.expense.name)
     
     # Get the current date and time
     current_datetime = datetime.now().strftime('%Y%m%d_%H%M%S')
