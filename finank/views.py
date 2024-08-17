@@ -65,7 +65,6 @@ def expenses_overview(request):
 
     return render(request, 'expenses_overview.html', context)
 
-
 def upload_receipt(request):
     current_month = datetime.now().month
     current_year = datetime.now().year
@@ -81,7 +80,10 @@ def upload_receipt(request):
             if not variable_amount:
                 return render(request, 'upload_receipt.html', {
                     'expenses': Expense.objects.all(),
-                    'error': 'Please enter the amount for the selected expense.'
+                    'error': 'Please enter the amount for the selected expense.',
+                    'months': range(1, 13),  # Pass months to template
+                    'current_month': current_month,
+                    'current_year': current_year
                 })
             receipt_amount = float(variable_amount)
         else:
@@ -105,6 +107,7 @@ def upload_receipt(request):
     expenses = Expense.objects.all()
     return render(request, 'upload_receipt.html', {
         'expenses': expenses,
+        'months': range(1, 13),  # Pass months to template
         'current_month': current_month,
         'current_year': current_year
     })
