@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='finank',
-    version='0.9.38',
+    version='0.9.40',
     packages=find_packages(),
     include_package_data=True,
     license='MIT License',  # Choose an appropriate license

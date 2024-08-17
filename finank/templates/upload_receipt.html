@@ -39,8 +39,15 @@
     <button type="submit" class="btn btn-primary">Upload</button>
 </form>
 
+<!-- Debug block to list all expenses -->
+<ul>
+    {% for expense in expenses %}
+    <li>{{ expense.description }} - {{ expense.amount }}</li>
+    {% endfor %}
+</ul>
+
 <script>
-// JavaScript to filter expenses based on user input
+// JavaScript to display all expenses without filtering
 document.addEventListener("DOMContentLoaded", function() {
     const input = document.getElementById('expense');
     const expenseList = document.getElementById('expense-list');
@@ -56,28 +63,20 @@ document.addEventListener("DOMContentLoaded", function() {
         {% endfor %}
     ];
 
-    input.addEventListener('input', function() {
-        const query = input.value.toLowerCase();
-        expenseList.innerHTML = '';
-        if (query.length > 0) {
-            expenses.forEach(item => {
-                if (item.description.toLowerCase().includes(query)) {
-                    const li = document.createElement('li');
-                    li.classList.add('list-group-item');
-                    li.textContent = `${item.description} - ${item.amount == -1 ? "Variable Amount" : "$" + item.amount}`;
-                    li.dataset.id = item.id;
-                    li.dataset.amount = item.amount;
-                    li.addEventListener('click', function() {
-                        input.value = li.textContent;
-                        expenseList.innerHTML = '';
-                        selectedExpenseIdInput.value = li.dataset.id; // Store the selected expense ID
-                    });
-                    expenseList.appendChild(li);
-                }
-            });
-        }
+    // Display all expenses
+    expenses.forEach(item => {
+        const li = document.createElement('li');
+        li.classList.add('list-group-item');
+        li.textContent = `${item.description} - ${item.amount == -1 ? "Variable Amount" : "$" + item.amount}`;
+        li.dataset.id = item.id;
+        li.dataset.amount = item.amount;
+        li.addEventListener('click', function() {
+            input.value = li.textContent;
+            expenseList.innerHTML = '';
+            selectedExpenseIdInput.value = li.dataset.id; // Store the selected expense ID
+        });
+        expenseList.appendChild(li);
     });
 });
-
 </script>
 {% endblock %}
