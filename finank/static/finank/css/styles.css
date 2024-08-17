@@ -1,3 +1,8 @@
+/* Ensure the container is the reference point for absolute positioning */
+.form-group {
+    position: relative;
+}
+
 /* Style the list to look like a dropdown */
 #expense-list {
     list-style-type: none;
@@ -13,7 +18,7 @@
     position: absolute;
     /* Position it right below the input field */
     width: 100%;
-    /* Match the width of the input field */
+    /* Match the width of the input field/container */
     background-color: white;
     /* Set a background color */
     z-index: 1000;
