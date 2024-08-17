@@ -26,6 +26,13 @@
     {% for expense in expenses %}
     <li>
         {{ expense.name }} - ${{ expense.amount }} on {{ expense.date }}
+        {% if expense.receipts.exists %}
+        <ul>
+            {% for receipt in expense.receipts.all %}
+            <li>Receipt: ${{ receipt.amount }} paid on {{ receipt.uploaded_at }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
     </li>
     {% endfor %}
 </ul>
