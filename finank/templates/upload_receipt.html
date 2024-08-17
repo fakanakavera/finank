@@ -10,8 +10,13 @@
         <input type="text" id="expense" name="expense" class="form-control" autocomplete="off" placeholder="Start typing to search...">
         <ul id="expense-list" class="list-group"></ul>
         <input type="hidden" id="selected-expense-id" name="selected_expense_id">
+    </div>
+
+    <div class="form-group" id="variable-amount-group" style="display:none;">
+        <label for="variable-amount">Enter Amount:</label>
+        <input type="number" id="variable-amount" name="variable_amount" class="form-control" placeholder="Enter the amount" step="0.01">
     </div>    
-    
+
     <div class="form-group">
         <label for="receipt">Upload Receipt:</label>
         <input type="file" id="receipt" name="receipt" class="form-control">
@@ -25,6 +30,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const input = document.getElementById('expense');
     const expenseList = document.getElementById('expense-list');
     const selectedExpenseIdInput = document.getElementById('selected-expense-id');
+    const variableAmountGroup = document.getElementById('variable-amount-group');
+    const variableAmountInput = document.getElementById('variable-amount');
 
     const expenses = [
         {% for expense in expenses %}
@@ -44,12 +51,21 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (item.description.toLowerCase().includes(query)) {
                     const li = document.createElement('li');
                     li.classList.add('list-group-item');
-                    li.textContent = `${item.description} - $${item.amount}`;
+                    li.textContent = `${item.description} - ${item.amount == -1 ? "Variable Amount" : "$" + item.amount}`;
                     li.dataset.id = item.id;
+                    li.dataset.amount = item.amount;
                     li.addEventListener('click', function() {
                         input.value = li.textContent;
                         expenseList.innerHTML = '';
                         selectedExpenseIdInput.value = li.dataset.id; // Store the selected expense ID
+                        
+                        // Show or hide the variable amount input based on the expense amount
+                        if (li.dataset.amount == -1) {
+                            variableAmountGroup.style.display = 'block';
+                        } else {
+                            variableAmountGroup.style.display = 'none';
+                            variableAmountInput.value = ''; // Clear the variable amount input
+                        }
                     });
                     expenseList.appendChild(li);
                 }
