@@ -39,12 +39,7 @@
     <button type="submit" class="btn btn-primary">Upload</button>
 </form>
 
-<!-- Debug block to list all expenses -->
-<ul>
-    {% for expense in expenses %}
-    <li>{{ expense.description }} - {{ expense.amount }}</li>
-    {% endfor %}
-</ul>
+
 
 <script>
 // JavaScript to display all expenses without filtering
@@ -57,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
         {% for expense in expenses %}
         {
             id: "{{ expense.id }}",
-            description: "{{ expense.description }}",
+            name: "{{ expense.name }}",
             amount: "{{ expense.amount }}"
         },
         {% endfor %}
@@ -67,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
     expenses.forEach(item => {
         const li = document.createElement('li');
         li.classList.add('list-group-item');
-        li.textContent = `${item.description} - ${item.amount == -1 ? "Variable Amount" : "$" + item.amount}`;
+        li.textContent = `${item.name} - ${item.amount == -1 ? "Variable Amount" : "$" + item.amount}`;
         li.dataset.id = item.id;
         li.dataset.amount = item.amount;
         li.addEventListener('click', function() {
