@@ -1,3 +1,16 @@
+/* static/css/styles.css */
+
+/* Global styles for all pages */
+body {
+    background-color: black;
+    /* Set background to black */
+    color: white;
+    /* Set text color to white */
+}
+
+/* Additional global styles can be added here */
+
+
 /* Ensure the input field with form-control is the reference point for absolute positioning */
 .form-group {
     position: relative;
