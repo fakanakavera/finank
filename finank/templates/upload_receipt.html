@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
     input.addEventListener('input', function() {
         const query = input.value.toLowerCase();
         expenseList.innerHTML = '';
-        if (query.length > 1) {
+        if (query.length > 0) {
             expenses.forEach(item => {
                 if (item.description.toLowerCase().includes(query)) {
                     const li = document.createElement('li');
