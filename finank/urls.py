@@ -3,7 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 # import test view from views.py
-from .views import test, upload_receipt, expenses_overview, expenses_by_category
+from .views import test, upload_receipt, expenses_overview, expenses_by_category, display_receipt
 
 # create a path to the test view
 urlpatterns = [
@@ -11,6 +11,7 @@ urlpatterns = [
     path('upload-receipt/', upload_receipt, name='upload_receipt'),
     path('expenses-overview/', expenses_overview, name='expenses_overview'),
     path('expenses-by-category/', expenses_by_category, name='expenses_by_category'),
+    path('receipt/<str:image_name>/', display_receipt, name='display_receipt'),
 
 ]
 

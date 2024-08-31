@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Display Receipt
+{% endblock %}
+
+{% block content %}
+    <h2>Receipt Image</h2>
+    <img src="{{ MEDIA_URL }}receipts/{{ image_name }}" alt="Receipt Image">
+{% endblock %}

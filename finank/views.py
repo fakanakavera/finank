@@ -131,3 +131,9 @@ def upload_receipt(request):
         'current_month': current_month,
         'current_year': current_year
     })
+
+def display_receipt(request, image_name):
+    context = {
+        'image_name': image_name,
+    }
+    return render(request, 'receipts/display_receipt.html', context)
